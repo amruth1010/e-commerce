@@ -1,0 +1,12 @@
+{% extends 'admin_side/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Change Order Status - {{ order.order_number }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Update Status</button>
+    </form>
+</div>
+{% endblock %}

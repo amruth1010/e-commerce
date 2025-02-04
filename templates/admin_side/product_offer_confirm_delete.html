@@ -1,0 +1,23 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Product Offer</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- Adjust this path as needed -->
+</head>
+<body>
+    <h1>Delete Product Offer</h1>
+    <p>Are you sure you want to delete the offer for {{ offer.product.product_name }}?</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Confirm Deletion</button>
+    </form>
+    
+    <a href="{% url 'offers:list_offers' %}">Cancel</a>
+</body>
+</html>
+{% endblock %}

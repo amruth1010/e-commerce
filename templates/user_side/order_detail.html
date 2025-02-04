@@ -1,0 +1,126 @@
+{% extends 'user_side/base2.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <!-- Header Banner -->
+    <div class="bg-black text-white py-4 text-center">
+        <h1 class="text-2xl font-light tracking-wider">GLAMOURISTA</h1>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 py-12">
+        <!-- Order Status Bar -->
+        <div class="mb-12 text-center">
+            <div class="flex items-center justify-center mb-4">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm
+                    {% if order.payment_status == 'Success' %}bg-green-100 text-green-800
+                    {% elif order.payment_status == 'Failed' %}bg-red-100 text-red-800
+                    {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                    {{ order.payment_status }}
+                </span>
+            </div>
+            <h2 class="text-3xl font-light tracking-wide text-gray-900">Order #{{ order.order_number }}</h2>
+            <p class="text-gray-500 mt-2">{{ order.created_at|date:"F d, Y" }}</p>
+        </div>
+
+        <!-- Order Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <!-- Primary Order Info -->
+            <div class="bg-white rounded-lg shadow-sm p-6 space-y-4">
+                <h3 class="text-lg font-light mb-4 pb-2 border-b">Order Summary</h3>
+                
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Status</span>
+                        <span class="font-medium">{{ order.status }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Payment Method</span>
+                        <span class="font-medium">{{ order.get_payment_method_display }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Total Amount</span>
+                        <span class="font-medium">₹{{ order.total_amount|floatformat:2 }}</span>
+                    </div>
+                    
+                    {% if order.coupon %}
+                    <div class="flex justify-between items-center text-green-600">
+                        <span>Coupon Applied</span>
+                        <span>{{ order.coupon.code }} (-₹{{ order.coupon.discount_amount|floatformat:2 }})</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if order.transaction_id %}
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-gray-600">Transaction ID</span>
+                        <span class="font-mono">{{ order.transaction_id }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if payment_status %}
+                <div class="mt-6 p-4 rounded-lg text-center {% if payment_status == 'Success' %}bg-green-50 text-green-700{% elif payment_status == 'Failed' %}bg-red-50 text-red-700{% else %}bg-yellow-50 text-yellow-700{% endif %}">
+                    {% if payment_status == 'Success' %}
+                        <p class="font-medium">Payment Successful 🎉</p>
+                    {% elif payment_status == 'Failed' %}
+                        <p class="font-medium">Payment Failed</p>
+                        <p class="text-sm mt-1">Please try again or contact support</p>
+                    {% else %}
+                        <p class="font-medium">Payment Pending</p>
+                        <p class="text-sm mt-1">Please wait while we confirm your payment</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Shipping Address -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-light mb-4 pb-2 border-b">Delivery Address</h3>
+                {% if order.address %}
+                <div class="space-y-2 text-gray-600">
+                    <p class="font-medium text-gray-900">{{ order.address.address_line_1 }}</p>
+                    {% if order.address.address_line_2 %}
+                    <p>{{ order.address.address_line_2 }}</p>
+                    {% endif %}
+                    <p>{{ order.address.city }}, {{ order.address.state }} {{ order.address.postal_code }}</p>
+                    <p>{{ order.address.country }}</p>
+                    <p class="mt-4">
+                        <span class="text-gray-500">Phone:</span> 
+                        <span class="font-medium text-gray-900">{{ order.address.phone_number }}</span>
+                    </p>
+                </div>
+                {% else %}
+                <p class="text-gray-500">No shipping address available.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Order Actions -->
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8">
+            {% if order.status == 'Pending' or order.status == 'Processing' %}
+            <a href="{% url 'orders:order_cancel' order.id %}" 
+               class="w-full sm:w-auto px-6 py-3 bg-red-600 text-white text-center rounded-lg hover:bg-red-700 transition-colors">
+                Cancel Order
+            </a>
+            {% endif %}
+            
+            {% if order.status == "Delivered" %}
+            <a href="{% url 'orders:return_order' order.id %}" 
+               class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white text-center rounded-lg hover:bg-blue-700 transition-colors">
+                Return Order
+            </a>
+            {% endif %}
+            
+            <a href="{% url 'orders:generate_invoice' order.id %}" 
+               class="w-full sm:w-auto px-6 py-3 bg-black text-white text-center rounded-lg hover:bg-gray-800 transition-colors">
+                Download Invoice (PDF)
+            </a>
+        </div>
+
+        {% if razorpay_order_id %}
+        <div class="text-center text-sm text-gray-500 mt-8">
+            <p>Razorpay Order ID: {{ razorpay_order_id }}</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

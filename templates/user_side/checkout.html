@@ -1,0 +1,244 @@
+{% extends 'user_side/base2.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <!-- Header Banner -->
+    <div class="bg-black text-white py-4 text-center">
+        <h1 class="text-2xl font-light tracking-wider">GLAMOURISTA</h1>
+    </div>
+
+    <div class="container mx-auto px-4 py-12 max-w-5xl">
+        <h2 class="text-3xl font-light mb-8 text-center tracking-wide">Secure Checkout</h2>
+
+        <!-- Message Container -->
+        <div class="message-container mb-6"></div>
+
+        <!-- Loading Spinner -->
+        <div id="loading-spinner" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="animate-spin rounded-full h-16 w-16 border-4 border-pink-500 border-t-transparent"></div>
+        </div>
+
+        <form id="place-order-form" method="POST" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {% csrf_token %}
+            
+            <!-- Left Column: Shipping & Payment -->
+            <div class="space-y-8">
+                <!-- Shipping Address -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-xl font-light mb-6 flex items-center">
+                        <span class="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center mr-3">1</span>
+                        Delivery Address
+                    </h3>
+                    {% if form.address.errors %}
+                    <div class="text-red-500 mb-4">{{ form.address.errors }}</div>
+                    {% endif %}
+                    {% for address in addresses %}
+                    <div class="mb-4">
+                        <label class="flex items-start p-4 border rounded-lg {% if forloop.first %}border-pink-500 bg-pink-50{% else %}border-gray-200 hover:border-pink-500 hover:bg-pink-50{% endif %} transition-colors cursor-pointer">
+                            <input type="radio" name="address" value="{{ address.id }}" class="mt-1 mr-3 text-pink-500 focus:ring-pink-500" required {% if forloop.first %}checked{% endif %}>
+                            <div>
+                                <p>{{ address.address_line_1 }},</p>
+                                <p>city : {{ address.city }}, state :{{ address.state }},</p>
+                                <p>pincode : {{ address.postal_code }}</p>
+                                <p class="font-medium text-gray-700">
+                                    <i class="fas fa-phone mr-2"></i>{{ address.phone_number }}
+                                </p>
+                            </div>
+                        </label>
+                        
+                    </div>
+                    
+                    {% endfor %}
+                    <a href="{% url 'accounts:add_address' %}" class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition-colors text-sm">
+                        Add New Address
+                    </a>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-xl font-light mb-6 flex items-center">
+                        <span class="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center mr-3">2</span>
+                        Payment Method
+                    </h3>
+                    {% if form.payment_method.errors %}
+                    <div class="text-red-500 mb-4">{{ form.payment_method.errors }}</div>
+                    {% endif %}
+                    <div class="space-y-4">
+                        <label class="flex items-center p-4 border rounded-lg border-gray-200 hover:border-pink-500 hover:bg-pink-50 transition-colors cursor-pointer">
+                            <input type="radio" name="payment_method" value="razorpay" class="mr-3 text-pink-500 focus:ring-pink-500" required>
+                            <span class="flex items-center">
+                                <span class="mr-2">Pay Online (Razorpay)</span>
+                                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="24" height="24" rx="4" fill="#2D2D2D"/>
+                                    <path d="M7 13L10 16L17 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                        </label>
+                        {% comment %} <label class="flex items-center p-4 border rounded-lg border-gray-200 hover:border-pink-500 hover:bg-pink-50 transition-colors cursor-pointer">
+                            <input type="radio" name="payment_method" value="wallet" class="mr-3 text-pink-500 focus:ring-pink-500" required>
+                            <span>Wallet</span>
+                        </label> {% endcomment %}
+                        <label class="flex items-center p-4 border rounded-lg border-gray-200 hover:border-pink-500 hover:bg-pink-50 transition-colors cursor-pointer">
+                            <input type="radio" name="payment_method" value="cod" class="mr-3 text-pink-500 focus:ring-pink-500" required>
+                            <span>Cash on Delivery</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Order Summary -->
+            <div class="bg-white p-6 rounded-lg shadow-sm h-fit">
+                <h3 class="text-xl font-light mb-6 flex items-center">
+                    <span class="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center mr-3">3</span>
+                    Order Summary
+                </h3>
+                
+                <div class="divide-y">
+                    {% for item in cart_items %}
+                    <div class="py-4 flex justify-between items-center">
+                        <div>
+                            <span class="font-medium">{{ item.product.product_name }}</span>
+                            <p class="text-sm text-gray-500">Quantity: {{ item.quantity }}</p>
+                        </div>
+                        <span class="font-medium">₹{{ item.get_total }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                {% if applied_coupon %}
+                <div class="flex justify-between items-center py-4 text-green-600 border-t">
+                    <span>Coupon ({{ applied_coupon.code }})</span>
+                    <span>-₹{{ applied_coupon.discount_amount }}</span>
+                </div>
+                {% endif %}
+                
+                <div class="border-t border-black pt-4 mt-4">
+                    <div class="flex justify-between items-center text-lg font-medium">
+                        <span>Total Amount</span>
+                        <span>₹{{ total_amount }}</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Including all taxes and shipping charges</p>
+                </div>
+
+                <button type="submit" class="w-full bg-black text-white px-6 py-4 rounded-lg hover:bg-gray-800 transition-colors mt-8 font-medium tracking-wide">
+                    Place Order
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Razorpay Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    // ... (keeping the existing JavaScript code unchanged as it handles the functionality) ...
+    document.getElementById('place-order-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        showLoadingSpinner();
+        
+        fetch('{% url "orders:checkout" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoadingSpinner();
+            
+            if (data.status === 'success') {
+                if (data.payment_method === 'cod') {
+                    showMessage('Order placed successfully! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = data.redirect_url;
+                    }, 1500);
+                } else {
+                    const options = {
+                        key: data.key,
+                        amount: data.amount,
+                        currency: 'INR',
+                        name: 'Glamourista',
+                        description: 'Order Payment',
+                        order_id: data.order_id,
+                        handler: handlePaymentResponse,
+                        prefill: {
+                            email: '{{ request.user.email|default:"" }}',
+                            contact: '{{ request.user.phone_number|default:"" }}'
+                        },
+                        theme: {
+                            color: '#000000'
+                        }
+                    };
+                    
+                    const rzp = new Razorpay(options);
+                    rzp.open();
+                }
+            } else {
+                showMessage(data.message || 'An error occurred', 'error');
+            }
+        })
+        .catch(error => {
+            hideLoadingSpinner();
+            console.error('Error:', error);
+            showMessage('An error occurred. Please try again.', 'error');
+        });
+    });
+
+    function handlePaymentResponse(response) {
+        showLoadingSpinner();
+        
+        const formData = new FormData();
+        formData.append('razorpay_payment_id', response.razorpay_payment_id);
+        formData.append('razorpay_order_id', response.razorpay_order_id);
+        formData.append('razorpay_signature', response.razorpay_signature);
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+        fetch('{% url "orders:payment_callback" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoadingSpinner();
+            if (data.status === 'success') {
+                showMessage('Payment successful! Redirecting...', 'success');
+                setTimeout(() => {
+                    window.location.href = data.redirect_url;
+                }, 1500);
+            } else {
+                showMessage(data.message || 'Payment failed', 'error');
+            }
+        })
+        .catch(error => {
+            hideLoadingSpinner();
+            console.error('Error:', error);
+            showMessage('Payment processing failed. Please try again.', 'error');
+        });
+    }
+
+    function showMessage(message, type) {
+        const messageContainer = document.querySelector('.message-container');
+        messageContainer.innerHTML = `
+            <div class="p-4 rounded-lg ${type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} text-center">
+                ${message}
+            </div>
+        `;
+    }
+
+    function showLoadingSpinner() {
+        document.getElementById('loading-spinner').classList.remove('hidden');
+    }
+
+    function hideLoadingSpinner() {
+        document.getElementById('loading-spinner').classList.add('hidden');
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,276 @@
+{% extends 'user_side/base2.html' %}
+{% load static %}
+{% block content %}
+<div class="wallet-container">
+    <!-- Balance Card -->
+    <div class="balance-card">
+        <div class="balance-content">
+            <div class="balance-header">
+                <h4>Available Balance</h4>
+                <span class="balance-icon">
+                    <i class="fas fa-wallet"></i>
+                </span>
+            </div>
+            <h2 class="balance-amount">₹{{ wallet.balance }}</h2>
+            <div class="balance-gradient"></div>
+        </div>
+    </div>
+
+    <!-- Transactions Card -->
+    <div class="transactions-card">
+        <div class="transactions-header">
+            <h4>Transaction History</h4>
+            <div class="header-line"></div>
+        </div>
+        <div class="transactions-table">
+            {% for transaction in transactions %}
+            <div class="transaction-item">
+                <div class="transaction-date">
+                    <span class="date-day">{{ transaction.created_at|date:"d" }}</span>
+                    <span class="date-month">{{ transaction.created_at|date:"M" }}</span>
+                </div>
+                <div class="transaction-type">
+                    {% if transaction.transaction_type == 'CREDIT' or transaction.transaction_type == 'REFUND' %}
+                    <span class="badge-success">{{ transaction.transaction_type }}</span>
+                    {% else %}
+                    <span class="badge-danger">{{ transaction.transaction_type }}</span>
+                    {% endif %}
+                </div>
+                <div class="transaction-amount {% if transaction.transaction_type == 'CREDIT' or transaction.transaction_type == 'REFUND' %}text-success{% else %}text-danger{% endif %}">
+                    ₹{{ transaction.amount }}
+                </div>
+                <div class="transaction-notes">{{ transaction.notes }}</div>
+            </div>
+            {% empty %}
+            <div class="no-transactions">
+                <img src="{% static 'images/empty-transactions.svg' %}" alt="No transactions" class="empty-icon">
+                <p>No transactions yet</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+/* Modern Wallet Styles */
+.wallet-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+/* Balance Card Styles */
+.balance-card {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.1);
+}
+
+.balance-content {
+    position: relative;
+    z-index: 1;
+}
+
+.balance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.balance-header h4 {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+.balance-icon {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.75rem;
+    border-radius: 50%;
+    color: white;
+}
+
+.balance-amount {
+    color: white;
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.balance-gradient {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: radial-gradient(circle at top right, rgba(255,255,255,0.1) 0%, transparent 60%);
+}
+
+/* Transactions Card Styles */
+.transactions-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.transactions-header {
+    margin-bottom: 2rem;
+}
+
+.transactions-header h4 {
+    color: #1f2937;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.header-line {
+    height: 3px;
+    width: 50px;
+    background: #6366f1;
+    border-radius: 3px;
+}
+
+/* Transaction Items */
+.transaction-item {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #f3f4f6;
+    transition: background-color 0.2s ease;
+}
+
+.transaction-item:hover {
+    background-color: #f9fafb;
+}
+
+.transaction-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 60px;
+}
+
+.date-day {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.date-month {
+    font-size: 0.875rem;
+    color: #6b7280;
+    text-transform: uppercase;
+}
+
+.badge-success, .badge-danger {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.badge-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #059669;
+}
+
+.badge-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+}
+
+.transaction-amount {
+    font-weight: 600;
+    font-size: 1.125rem;
+}
+
+.text-success {
+    color: #059669;
+}
+
+.text-danger {
+    color: #dc2626;
+}
+
+.transaction-notes {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+/* Empty State */
+.no-transactions {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.empty-icon {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.no-transactions p {
+    color: #6b7280;
+    font-size: 1.125rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .transaction-item {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .transaction-date {
+        grid-column: 1;
+        grid-row: 1;
+    }
+    
+    .transaction-type {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+    }
+    
+    .transaction-amount {
+        grid-column: 1;
+        grid-row: 2;
+    }
+    
+    .transaction-notes {
+        grid-column: 2;
+        grid-row: 2;
+        text-align: right;
+    }
+}
+
+@media (max-width: 480px) {
+    .wallet-container {
+        padding: 0 1rem;
+    }
+    
+    .balance-amount {
+        font-size: 2.5rem;
+    }
+    
+    .transactions-card {
+        padding: 1.5rem;
+    }
+}
+</style>
+{% endblock %}

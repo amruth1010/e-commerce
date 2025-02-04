@@ -1,0 +1,38 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+env/
+venv/
+ENV/
+.venv/
+*.egg-info/
+
+# Django specific
+db.sqlite3
+*.log
+media/
+staticfiles/
+*.pot
+*.pyc
+
+# Environment variables
+.env
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS files
+.DS_Store
+
+# Windows thumbnail cache
+Thumbs.db
+
+# Git conflicts
+*.orig

@@ -1,0 +1,43 @@
+
+{% extends 'admin_side/base.html' %}
+
+{% block content %}
+<h2 style="color: #088178; text-align: center;">Create a New Coupon</h2>
+
+<form method="POST" class="coupon-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Create Coupon</button>
+</form>
+
+<style>
+    .coupon-form {
+        width: 50%;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background-color: #088178; /* Custom Green */
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        margin-top: 20px;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #066b5e; /* Darker Green on hover */
+    }
+</style>
+{% endblock %}

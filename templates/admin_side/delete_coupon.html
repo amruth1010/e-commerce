@@ -1,0 +1,59 @@
+{% extends 'admin_side/base.html' %}
+
+{% block content %}
+<h2 style="color: #088178; text-align: center;">Delete Coupon</h2>
+<p style="font-size: 18px; text-align: center;">
+  Are you sure you want to delete the coupon: <strong>{{ coupon.code }}</strong>?
+</p>
+<form method="post" style="text-align: center;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger" style="padding: 10px 20px; border-radius: 5px; margin-right: 10px;">
+        Delete
+    </button>
+    <a href="{% url 'orders:coupon_list' %}" class="btn btn-secondary" style="padding: 10px 20px; border-radius: 5px; text-decoration: none;">
+        Cancel
+    </a>
+</form>
+
+<style>
+    body {
+        background-color: #f9f9f9; /* Light background for the page */
+        font-family: Arial, sans-serif; /* Font styling */
+        margin: 20px;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        font-size: 28px; /* Size of the heading */
+        font-weight: bold;
+        color: #088178; /* Custom Green color */
+    }
+
+    p {
+        font-size: 20px; /* Font size for the paragraph */
+        color: #333; /* Dark text color */
+    }
+
+    .btn-danger {
+        background-color: red; /* Button color for delete */
+        color: #fff; /* Text color for button */
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        background-color: darkred; /* Darker shade on hover */
+    }
+
+    .btn-secondary {
+        background-color: #6c757d; /* Default gray color for cancel button */
+        color: #fff; /* Text color for button */
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268; /* Darker shade on hover */
+    }
+</style>
+{% endblock %}

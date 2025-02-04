@@ -1,0 +1,223 @@
+{% extends 'user_side/base2.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    .login-container {
+        min-height: 100vh;
+        background-color: #f8f8f8;
+        padding: 40px 20px;
+    }
+
+    .login-box {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+        padding: 40px;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .login-header h1 {
+        font-size: 2.2em;
+        font-weight: 300;
+        color: #1a1a1a;
+        letter-spacing: 1.5px;
+        margin-bottom: 15px;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #666;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 15px;
+        border: 1.5px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1em;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #1a1a1a;
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+        outline: none;
+    }
+
+    .btn-login {
+        background-color: #1a1a1a;
+        color: white;
+        padding: 15px;
+        border: none;
+        border-radius: 8px;
+        width: 100%;
+        font-size: 1em;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+
+    .btn-login:hover {
+        background-color: #333;
+        transform: translateY(-2px);
+    }
+
+    .btn-demo {
+        background-color: #4a4a4a;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        width: 100%;
+        font-size: 0.9em;
+        letter-spacing: 1px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-demo:hover {
+        background-color: #5a5a5a;
+        color: white;
+        text-decoration: none;
+    }
+
+    .alert {
+        background-color: #fff3cd;
+        border: 1px solid #ffeeba;
+        color: #856404;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .alert ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .demo-notification {
+        background-color: #fffbe6;
+        border: 1px solid #ffe58f;
+        color: #856404;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .links-container {
+        text-align: center;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+    }
+
+    .links-container a {
+        color: #666;
+        text-decoration: none;
+        font-size: 0.9em;
+        transition: color 0.3s ease;
+        margin: 0 10px;
+    }
+
+    .links-container a:hover {
+        color: #1a1a1a;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 576px) {
+        .login-box {
+            padding: 25px;
+        }
+        
+        .login-header h1 {
+            font-size: 1.8em;
+        }
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-box">
+        <div class="login-header">
+            <h1>Welcome Back</h1>
+        </div>
+
+        {% if messages %}
+            <div class="alert">
+                <ul>
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if request.user.email == 'demo@example.com' %}
+            <div class="demo-notification">
+                You are currently logged in as a demo user. Some features may be limited.
+            </div>
+        {% endif %}
+
+        <form method="post" id="CustomerLoginForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Email</label>
+                {{ form.username }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">Password</label>
+                {{ form.password }}
+            </div>
+            <button type="submit" class="btn-login">Sign In</button>
+            <button class="btn-login">
+                <a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google</a>
+            </button>        
+        </form>
+
+        <a href="{% url 'accounts:demo_login' %}" class="btn-demo">
+            Try Demo Login
+        </a>
+
+        <div class="links-container">
+            <a href="{% url 'accounts:forgot_password'%}">Forgot Password?</a>
+            <span>|</span>
+            <a href="{% url 'accounts:signup' %}">Create Account</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('CustomerLoginForm').addEventListener('submit', function(event) {
+        var email = this.querySelector('input[name="username"]').value;
+        var password = this.querySelector('input[name="password"]').value;
+  
+        if (!email || !password) {
+            event.preventDefault();
+            alert('Please fill out both fields.');
+        }
+    });
+</script>
+
+{% endblock %}

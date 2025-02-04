@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Glamourista{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #FFFFFF;
+            color: #1A1A1A;
+        }
+
+        /* Elegant Header */
+        .fashion-header {
+            background-color: #FFFFFF;
+            border-bottom: 1px solid #E5E5E5;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header-scrolled {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .brand-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            color: #1A1A1A;
+        }
+
+        .nav-icon {
+            transition: all 0.3s ease;
+            position: relative;
+            color: #1A1A1A;
+        }
+
+        .nav-icon:hover {
+            transform: translateY(-2px);
+            color: #D4AF37;
+        }
+
+        .nav-icon span {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+        }
+
+        .cart-count, .wishlist-count {
+            background-color: #D4AF37;
+            color: #FFFFFF;
+            font-size: 0.7rem;
+            font-weight: 600;
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Luxurious Footer */
+        .fashion-footer {
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            padding: 5rem 0;
+        }
+
+        .footer-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .footer-subtitle {
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            line-height: 1.8;
+        }
+
+        .social-icons a {
+            transition: all 0.3s ease;
+            opacity: 0.8;
+        }
+
+        .social-icons a:hover {
+            opacity: 1;
+            color: #D4AF37;
+            transform: translateY(-3px);
+        }
+
+        .footer-heading {
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background-color: #D4AF37;
+        }
+
+        .footer-link {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+        }
+
+        .footer-link:hover {
+            color: #D4AF37;
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        .copyright {
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            opacity: 0.7;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .fashion-header {
+                padding: 0.5rem 0;
+            }
+
+            .brand-name {
+                font-size: 1.5rem;
+            }
+
+            .nav-icon span {
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Elegant Header -->
+    <header class="fashion-header py-4">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center">
+                <h1 class="brand-name">Glamourista</h1>
+            </div>
+            
+            <nav>
+                <ul class="flex space-x-8 items-center">
+                    <li>
+                        <a href="{% url 'accounts:home' %}" class="nav-icon flex flex-col items-center">
+                            <i class="fas fa-home text-xl mb-1"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'dashboard:contact' %}" class="nav-icon flex flex-col items-center">
+                            <i class="fas fa-envelope text-xl mb-1"></i>
+                            <span>Contact</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'dashboard:about' %}" class="nav-icon flex flex-col items-center">
+                            <i class="fas fa-info-circle text-xl mb-1"></i>
+                            <span>About</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'product:wishlist' %}" class="nav-icon flex flex-col items-center relative">
+                            <i class="fas fa-heart text-xl mb-1"></i>
+                            {% if wishlist_count %}
+                            <span class="wishlist-count absolute -top-1 -right-1 rounded-full flex items-center justify-center">
+                                {{ wishlist_count }}
+                            </span>
+                            {% endif %}
+                            <span>Wishlist</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:cart_detail' %}" class="nav-icon flex flex-col items-center relative">
+                            <i class="fas fa-shopping-bag text-xl mb-1"></i>
+                            <span class="cart-count absolute -top-1 -right-1 rounded-full flex items-center justify-center">0</span>
+                            <span>Cart</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:userdash' %}" class="nav-icon flex flex-col items-center">
+                            <i class="fas fa-user text-xl mb-1"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Content Spacer for Fixed Header -->
+    <div class="h-24"></div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Luxurious Footer -->
+    <footer class="fashion-footer">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12">
+                <div>
+                    <h2 class="footer-title">Glamourista</h2>
+                    <p class="footer-subtitle mb-6">Elevate your style with timeless elegance and contemporary fashion.</p>
+                    <div class="social-icons flex space-x-6">
+                        <a href="#" class="text-xl"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-xl"><i class="fab fa-pinterest-p"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="footer-heading">Collections</h3>
+                    <ul>
+                        <li><a href="#" class="footer-link">New Arrivals</a></li>
+                        <li><a href="#" class="footer-link">Best Sellers</a></li>
+                        <li><a href="#" class="footer-link">Trending Now</a></li>
+                        <li><a href="#" class="footer-link">Sale</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="footer-heading">Customer Service</h3>
+                    <ul>
+                        <li><a href="#" class="footer-link">Contact Us</a></li>
+                        <li><a href="#" class="footer-link">Shipping & Returns</a></li>
+                        <li><a href="#" class="footer-link">Size Guide</a></li>
+                        <li><a href="#" class="footer-link">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="footer-heading">About</h3>
+                    <ul>
+                        <li><a href="#" class="footer-link">Our Story</a></li>
+                        <li><a href="#" class="footer-link">Sustainability</a></li>
+                        <li><a href="#" class="footer-link">Careers</a></li>
+                        <li><a href="#" class="footer-link">Terms & Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="text-center copyright mt-12">
+                © 2024 Glamourista. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.fashion-header');
+            if (window.scrollY > 50) {
+                header.classList.add('header-scrolled');
+            } else {
+                header.classList.remove('header-scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

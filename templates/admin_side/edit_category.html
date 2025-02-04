@@ -1,0 +1,84 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-6 offset-md-3">
+            <h2 class="text-center mb-4">Edit Category</h2>
+
+            <form method="POST" class="category-form">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="name">Category Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ category.name }}" placeholder="Enter category name" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="description">Description:</label>
+                    <textarea class="form-control" id="description" name="description" rows="4" placeholder="Enter category description" required>{{ category.description }}</textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">Update Category</button>
+            </form>
+
+            <div class="text-center mt-4">
+                <a href="{% url 'category:list_categories' %}" class="btn btn-secondary mt-3">Back to Categories</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+<style>
+    /* Styles for the Edit Category Page */
+    .container {
+        max-width: 600px;
+        margin-top: 50px;
+    }
+
+    h2 {
+        font-size: 28px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+
+    .form-control:focus {
+        border-color: #28a745;
+        box-shadow: none;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+        padding: 10px 20px;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+        padding: 10px 20px;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+</style>

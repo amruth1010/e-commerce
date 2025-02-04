@@ -1,0 +1,99 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if form.instance.id %}Edit{% else %}Add{% endif %} Product Offer</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Adjust this path as needed -->
+    <style>
+        /* Scoped styles within .product-offer-management */
+        .product-offer-management {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-offer-management h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .product-offer-management form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-offer-management button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .product-offer-management button:hover {
+            background-color: #218838;
+        }
+
+        .product-offer-management a {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #28a745;
+            text-decoration: none;
+        }
+
+        .product-offer-management a:hover {
+            color: #218838;
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="product-offer-management">
+        <h1>{% if form.instance.id %}Edit{% else %}Add{% endif %} Product Offer</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                <div class="error">
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            {{ form.as_p }}  <!-- Django form rendering -->
+            <button type="submit">Save Offer</button>
+        </form>
+        
+        <a href="{% url 'offers:list_offers' %}">Back to Offers</a>
+    </div>
+</body>
+</html>
+{% endblock %}

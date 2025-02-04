@@ -1,0 +1,112 @@
+{% extends 'admin_side/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Orders Management</h1>
+    <table class="order-table">
+        <thead>
+            <tr>
+                <th>Order Number</th>
+                <th>Date</th>
+                <th>User</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.order_number }}</td>
+                <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+                <td>{{ order.user.email }}</td>
+                <td>₹{{ order.total_amount|floatformat:2 }}</td>
+                <td>{{ order.status }}</td>
+                <td>
+                    <a href="{% url 'orders:admin_order_detail' order.id %}" class="action-link">View</a> |
+                    <a href="{% url 'orders:change_order_status' order.id %}" class="action-link">Change Status</a> |
+                    {% if order.status != 'Cancelled' %}
+                        <a href="{% url 'orders:cancel_order' order.id %}" class="text-danger">Cancel</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+    /* General Styles */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #e8f5e9; /* Light green background */
+    }
+
+    /* Container Styles */
+    .container {
+        max-width: 1000px; /* Set a max width for the container */
+        margin: auto; /* Center the container */
+        padding: 20px;
+        background: #ffffff; /* White background for content */
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Header Styles */
+    h1 {
+        text-align: center; /* Center the heading */
+        color: #388e3c; /* Dark green color */
+        margin-bottom: 20px;
+    }
+
+    /* Table Styles */
+    .order-table {
+        width: 100%;
+        border-collapse: collapse; /* Remove space between cells */
+        margin-top: 20px;
+    }
+
+    thead {
+        background-color: #4caf50; /* Medium green for the header */
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left; /* Align text to the left */
+        border: 1px solid #c8e6c9; /* Light green border */
+    }
+
+    th {
+        color: #388e3c;; /* White text for headers */
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #c8e6c9; /* Lighter green for even rows */
+    }
+
+    tbody tr:hover {
+        background-color: #81c784; /* Change background on hover */
+    }
+
+    /* Action Link Styles */
+    .action-link {
+        color: #388e3c; /* Dark green for action links */
+        text-decoration: none; /* Remove underline */
+        transition: color 0.3s ease;
+    }
+
+    .action-link:hover {
+        color: #2e7d32; /* Darker green on hover */
+    }
+
+    .text-danger {
+        color: #d32f2f; /* Red for cancel link */
+    }
+
+    .text-danger:hover {
+        text-decoration: underline; /* Underline on hover for cancel link */
+    }
+</style>
+{% endblock %}

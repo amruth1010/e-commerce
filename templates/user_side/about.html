@@ -1,0 +1,202 @@
+{% extends 'user_side/base2.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #fdfbf9;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #f8f1ff 0%, #fff5f5 100%);
+            text-align: center;
+            padding: 6rem 0;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4) 0%, transparent 70%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .section {
+            margin-bottom: 5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.8s ease forwards;
+        }
+        
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: #2c1810;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-family: 'Playfair Display', serif;
+            color: #2c1810;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #d23669, #ff9ebd);
+            margin-top: 10px;
+        }
+        
+        .mission-box {
+            background: linear-gradient(135deg, #fff8f8 0%, #fff 100%);
+            padding: 3rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.8);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mission-box::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            right: 30px;
+            font-size: 150px;
+            color: rgba(210,54,105,0.1);
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .value-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+        
+        .value-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+        
+        .value-card h3 {
+            color: #d23669;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .value-icon {
+            font-size: 2.5rem;
+            color: #d23669;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .highlight-text {
+            color: #d23669;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>About Glamourista</h1>
+            <p style="font-size: 1.2rem; color: #666;">Redefining Fashion, Empowering Style</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <h2>Our Story</h2>
+            <p>Welcome to <span class="highlight-text">Glamourista</span>, where fashion transcends mere clothing to become an expression of individual identity. Since our inception, we've been dedicated to curating collections that blend contemporary trends with timeless elegance, creating a sanctuary for fashion enthusiasts who appreciate sophistication and style.</p>
+            
+            <div class="mission-box">
+                <h2>Our Mission</h2>
+                <p>To revolutionize the fashion landscape by empowering individuals to embrace their unique style journey, while upholding uncompromising standards of quality and delivering exceptional customer experiences that inspire confidence and self-expression.</p>
+            </div>
+            
+            <p>At Glamourista, our passion for fashion drives us to explore the globe, seeking out the most innovative designs and finest craftsmanship. Our commitment to sustainable and ethical fashion ensures that every piece not only looks extraordinary but also contributes to a better world.</p>
+        </div>
+
+        <div class="section">
+            <h2>Our Values</h2>
+            <div class="value-card">
+                <i class="fas fa-gem value-icon"></i>
+                <h3>Quality & Craftsmanship</h3>
+                <p>Every piece in our collection undergoes rigorous quality assessment, ensuring that only the finest garments bear the Glamourista name.</p>
+            </div>
+            
+            <div class="value-card">
+                <i class="fas fa-leaf value-icon"></i>
+                <h3>Sustainable Fashion</h3>
+                <p>Our dedication to sustainable practices reflects our responsibility to both our customers and the planet, promoting conscious fashion choices.</p>
+            </div>
+            
+            <div class="value-card">
+                <i class="fas fa-heart value-icon"></i>
+                <h3>Customer First</h3>
+                <p>Your satisfaction is our paramount concern. We strive to create shopping experiences that exceed expectations and inspire loyalty.</p>
+            </div>
+            
+            <div class="value-card">
+                <i class="fas fa-users value-icon"></i>
+                <h3>Inclusive Fashion</h3>
+                <p>Fashion knows no boundaries. Our diverse collections celebrate individuality and ensure everyone finds their perfect style expression.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

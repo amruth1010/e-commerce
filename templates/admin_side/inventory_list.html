@@ -1,0 +1,25 @@
+{% extends 'admin_side/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Inventory Management</h1>
+    <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.stock }}</td>
+                <td><a href="{% url 'admin_side:edit_stock' product.id %}">Edit Stock</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

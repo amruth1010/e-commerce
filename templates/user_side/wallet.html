@@ -1,0 +1,11 @@
+{% extends 'user_side/base.html' %}
+{% load static %}
+{% block content %}
+<h1>Wallet Balance: {{ wallet.balance }}</h1>
+<h2>Transaction History</h2>
+<ul>
+    {% for transaction in transactions %}
+        <li>{{ transaction.created_at }}: {{ transaction.transaction_type }} - {{ transaction.amount }} ({{ transaction.description }})</li>
+    {% endfor %}
+</ul>
+{% endblock %}

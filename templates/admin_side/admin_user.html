@@ -1,0 +1,135 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #444;
+            margin-bottom: 30px;
+        }
+
+        /* Table styling */
+        table {
+            width: 90%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        td {
+            color: #555;
+        }
+
+        /* Button styling */
+        a {
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-block {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-unblock {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-block:hover, .btn-unblock:hover {
+            opacity: 0.8;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            table {
+                width: 100%;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>User Management</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.first_name }} {{ user.last_name }}</td>
+                <td>
+                    {% if user.is_blocked %}
+                        <span style="color: red;">Blocked</span>
+                    {% else %}
+                        <span style="color: green;">Active</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% if user.is_blocked %}{% url 'user_dash:user_unblock' user.id %}{% else %}{% url 'user_dash:user_block' user.id %}{% endif %}" 
+                    class="{% if user.is_blocked %}btn-unblock{% else %}btn-block{% endif %}">
+                        {% if user.is_blocked %}
+                            Unblock
+                        {% else %}
+                            Block
+                        {% endif %}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
+
+{% endblock %}

@@ -1,0 +1,193 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offers Management</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> 
+    <style>
+        /* Scope all styles under .offers-management */
+        .offers-management {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff; /* Black background */
+            color: #ffffff; /* White text */
+            margin: 20px;
+        }
+
+        .offers-management h3, .offers-management h4, h5 {
+            color: #222; /* Green color for headers */
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        /* Table styling */
+        .offers-management table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+
+        .offers-management table, .offers-management th, .offers-management td {
+            border: 1px solid #28a745; /* Green borders */
+        }
+
+        .offers-management th, .offers-management td {
+            padding: 12px 15px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .offers-management th {
+            background-color: #28a745; /* Green table headers */
+            color: #222;
+            text-transform: uppercase;
+        }
+
+        .offers-management td {
+            background-color: #ffffff; /* Dark grey for table rows */
+            color: #222;
+        }
+
+        /* Links and buttons */
+        .offers-management a {
+            color: #28a745;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid #28a745;
+            transition: all 0.3s ease;
+        }
+
+        .offers-management a:hover {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .offers-management .actions a {
+            margin: 0 5px;
+        }
+
+        
+        .offers-management .empty-row {
+            text-align: center;
+            background-color: #333;
+        }
+
+        /* Add Offer button styling */
+        .offers-management .btn-add {
+            display: inline-block;
+            margin-bottom: 20px;
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .offers-management .btn-add:hover {
+            background-color: #218838;
+            color: #fff;
+        }
+
+        
+        @media (max-width: 768px) {
+            .offers-management table, .offers-management th, .offers-management td {
+                font-size: 14px;
+            }
+
+            .offers-management h1, .offers-management h2 {
+                font-size: 24px;
+            }
+
+            .offers-management .btn-add {
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offers-management">
+        {% comment %} <h3>Offers Management</h3> {% endcomment %}
+
+        <h4>Category Offers</h4>
+        <a href="{% url 'offers:add_category_offer' %}" class="btn-add">Add New Category Offer</a>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Discount (%)</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for offer in category_offers %}
+                <tr>
+                    <td>{{ offer.category.name }}</td>
+                    <td>{{ offer.discount_percent }}</td>
+                    <td>{{ offer.start_date }}</td>
+                    <td>{{ offer.end_date }}</td>
+                    <td>{{ offer.is_active|yesno:"Active,Inactive" }}</td>
+                    <td class="actions">
+                        <a href="{% url 'offers:edit_category_offer' offer.id %}">Edit</a>
+                        <a href="{% url 'offers:delete_category_offer' offer.id %}">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr class="empty-row">
+                    <td colspan="6">No category offers available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h5>Product Offers</h5>
+        <a href="{% url 'offers:add_product_offer' %}" class="btn-add">Add New Product Offer</a>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Discount (%)</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for offer in product_offers %}
+                <tr>
+                    <td>{{ offer.product.product_name }}</td>
+                    <td>{{ offer.discount_percent }}</td>
+                    <td>{{ offer.start_date }}</td>
+                    <td>{{ offer.end_date }}</td>
+                    <td>{{ offer.is_active|yesno:"Active,Inactive" }}</td>
+                    <td class="actions">
+                        <a href="{% url 'offers:edit_product_offer' offer.id %}">Edit</a>
+                        <a href="{% url 'offers:delete_product_offer' offer.id %}">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr class="empty-row">
+                    <td colspan="6">No product offers available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+{% endblock %}

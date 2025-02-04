@@ -1,0 +1,172 @@
+{% extends "user_side/base2.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+    <h4 class="text-center search-results-title">Showing results for "{{ query }}"</h4>
+    <div class="row mt-4">
+        {% if results %}
+            {% for product in results %}
+                <div class="col-md-4 mb-4">
+                    <div class="card product-card">
+                        <div class="image-container">
+                            <img src="{{ product.thumbnail.url }}" class="card-img-top" alt="{{ product.product_name }}">
+                            <div class="hover-overlay">
+                                <a href="{% url 'product:product_detail' product.id %}" class="btn view-details-btn">View Details</a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.product_name }}</h5>
+                            <p class="card-text">₹{{ product.price }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center">
+                <p class="no-results">No results found for "{{ query }}"</p>
+                <p class="suggestion">Try searching with different keywords or browse our collections</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #FDFBF7;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        color: #1A1A1A;
+    }
+
+    .container {
+        max-width: 1400px;
+        padding: 0 30px;
+    }
+
+    .search-results-title {
+        font-size: 1.8rem;
+        font-weight: 300;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #1A1A1A;
+        margin-bottom: 40px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .search-results-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 2px;
+        background-color: #1A1A1A;
+    }
+
+    .product-card {
+        border: none;
+        border-radius: 0;
+        background-color: transparent;
+        margin-bottom: 30px;
+        overflow: hidden;
+    }
+
+    .image-container {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-img-top {
+        height: 400px;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+        background-color: #F5F5F5;
+    }
+
+    .hover-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .product-card:hover .hover-overlay {
+        opacity: 1;
+    }
+
+    .product-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    .card-body {
+        padding: 20px 0;
+        text-align: center;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+        font-weight: 400;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        color: #1A1A1A;
+    }
+
+    .card-text {
+        font-size: 1rem;
+        color: #4A4A4A;
+        font-weight: 500;
+    }
+
+    .view-details-btn {
+        background-color: transparent;
+        border: 2px solid #FFFFFF;
+        color: #FFFFFF;
+        padding: 12px 30px;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+    }
+
+    .view-details-btn:hover {
+        background-color: #FFFFFF;
+        color: #1A1A1A;
+        transform: none;
+    }
+
+    .no-results {
+        font-size: 1.2rem;
+        color: #1A1A1A;
+        margin-bottom: 10px;
+        font-weight: 300;
+    }
+
+    .suggestion {
+        font-size: 1rem;
+        color: #4A4A4A;
+        font-weight: 300;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 15px;
+        }
+
+        .card-img-top {
+            height: 300px;
+        }
+
+        .search-results-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}

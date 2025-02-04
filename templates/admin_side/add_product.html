@@ -1,0 +1,131 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <h1>Add New Product</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Product Form Fields -->
+        {{ form.as_p }}  <!-- Render the ProductForm fields -->
+
+        <!-- Size Variant Selection -->
+        {% comment %} <h3>Size Variants</h3>
+        <div id="size-variants">
+             {% for size_variant in form.size_variants %}
+                <div class="size-variant">
+                    {{ size_variant }} <!-- Renders the checkbox and label -->
+                </div>
+             {% endfor %}
+        </div> {% endcomment %}
+
+        <!-- Product Images (Multiple Uploads) -->
+        <div class="form-group">
+            <label for="images">Product Images</label>
+            <input type="file" id="images" name="images" multiple required> <!-- Keeping this as requested -->
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Add Product</button>
+            <a href="{% url 'product:product_list' %}" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<!-- Additional Styles -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #333;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="file"],
+    textarea,
+    select {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    textarea {
+        resize: vertical;
+    }
+
+    .btn-submit {
+        padding: 12px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .btn-submit:hover {
+        background-color: #218838;
+    }
+
+    .btn-cancel {
+        padding: 12px 20px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        display: inline-block;
+    }
+
+    .btn-cancel:hover {
+        background-color: #c82333;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .size-variant {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+</style>
+
+{% endblock %}

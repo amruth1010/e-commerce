@@ -1,0 +1,293 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- Link to your custom CSS -->
+</head>
+<body>
+
+<div class="container">
+    <h1>Edit Product</h1>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Display form errors, if any -->
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+        
+        <!-- Product Name -->
+        <div class="form-group">
+            <label for="product_name">Product Name:</label>
+            {{ form.product_name }}
+            {% if form.product_name.errors %}
+                <div class="error">
+                    {{ form.product_name.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Product Description -->
+        <div class="form-group">
+            <label for="product_description">Product Description:</label>
+            {{ form.product_description }}
+            {% if form.product_description.errors %}
+                <div class="error">
+                    {{ form.product_description.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Product Category -->
+        <div class="form-group">
+            <label for="product_category">Product Category:</label>
+            {{ form.product_category }}
+            {% if form.product_category.errors %}
+                <div class="error">
+                    {{ form.product_category.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Price -->
+        <div class="form-group">
+            <label for="price">Price:</label>
+            {{ form.price }}
+            {% if form.price.errors %}
+                <div class="error">
+                    {{ form.price.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Offer Price -->
+        <div class="form-group">
+            <label for="offer_price">Offer Price:</label>
+            {{ form.offer_price }}
+            {% if form.offer_price.errors %}
+                <div class="error">
+                    {{ form.offer_price.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Thumbnail Image -->
+        <div class="form-group">
+            <label for="thumbnail">Thumbnail Image:</label>
+            {{ form.thumbnail }}
+            {% if form.thumbnail.errors %}
+                <div class="error">
+                    {{ form.thumbnail.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Highlights -->
+        <div class="form-group">
+            <label for="highlights">Highlights:</label>
+            {{ form.highlights }}
+            {% if form.highlights.errors %}
+                <div class="error">
+                    {{ form.highlights.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Stock -->
+        <div class="form-group">
+            <label for="stock">Stock:</label>
+            {{ form.stock }}
+            {% if form.stock.errors %}
+                <div class="error">
+                    {{ form.stock.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Average Rating -->
+        <div class="form-group">
+            <label for="average_rating">Average Rating:</label>
+            {{ form.average_rating }}
+            {% if form.average_rating.errors %}
+                <div class="error">
+                    {{ form.average_rating.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Review Count -->
+        <div class="form-group">
+            <label for="review_count">Review Count:</label>
+            {{ form.review_count }}
+            {% if form.review_count.errors %}
+                <div class="error">
+                    {{ form.review_count.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Size Variants -->
+        <div class="form-group">
+            <label for="size_variants">Size Variants:</label>
+            {{ form.size_variants }}  <!-- Automatically renders the checkboxes for size variants -->
+            {% if form.size_variants.errors %}
+                <div class="error">
+                    {{ form.size_variants.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Update Product</button>
+        </div>
+    </form>
+</div>
+
+
+
+<style>
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General container styling */
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Heading */
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-family: 'Arial', sans-serif;
+    font-size: 28px;
+    color: #333;
+}
+
+/* Form Group styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="file"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Error message styling */
+.error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Size Variants styling (checkboxes) */
+.form-group .checkboxselectmultiple label {
+    display: block;
+    font-weight: normal;
+    color: #333;
+}
+
+.checkboxselectmultiple input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* Submit button */
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* File input styling (thumbnail) */
+input[type="file"] {
+    padding: 10px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+}
+
+/* Alerts for form-wide errors */
+.alert {
+    padding: 15px;
+    background-color: #f44336;
+    color: white;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.alert.alert-danger {
+    background-color: #dc3545;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    button[type="submit"] {
+        font-size: 16px;
+        padding: 10px;
+    }
+}
+
+</style>
+
+</body>
+</html>
+
+{% endblock %}

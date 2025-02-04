@@ -1,0 +1,152 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link rel="stylesheet" href="{% static 'css/admin_styles.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .add-product-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .add-product-btn:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        td {
+            color: #555;
+        }
+
+        .action-btns a {
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+
+        .edit-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        .thumbnail {
+            max-width: 50px;
+            max-height: 50px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Product List</h1>
+    <a href="{% url 'product:add_product' %}" class="add-product-btn">Add New Product</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Thumbnail</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Offer Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>
+                        {% if product.thumbnail %}
+                            <img src="{{ product.thumbnail.url }}" alt="{{ product.product_name }} thumbnail" class="thumbnail">
+                        {% else %}
+                            <p>No image</p>
+                        {% endif %}
+                </td>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.product_category }}</td>
+                <td>₹{{ product.price }}</td>
+                <td>₹{{ product.offer_price }}</td>
+                <td class="action-btns">
+                    <a href="{% url 'product:edit_product' product.id %}" class="edit-btn">Edit</a>
+                    <a href="{% url 'product:delete_product' product.id %}" class="delete-btn">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No products available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
+
+{% endblock %}

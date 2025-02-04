@@ -1,0 +1,180 @@
+{% extends "user_side/base2.html" %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f4f4f4;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .order-confirmation-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background-color: white;
+        padding: 3rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .order-confirmation-header {
+        margin-bottom: 2rem;
+    }
+
+    .order-confirmation-header h2 {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 1rem;
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .checkmark {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: #4CAF50;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+        animation: pop-in 0.6s ease-out;
+    }
+
+    .checkmark i {
+        color: white;
+        font-size: 4rem;
+    }
+
+    .order-details {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid #e9e9e9;
+    }
+
+    .order-details-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e9e9e9;
+    }
+
+    .order-details-row:last-child {
+        border-bottom: none;
+    }
+
+    .order-details-label {
+        color: #666;
+        font-weight: 500;
+    }
+
+    .order-details-value {
+        color: #333;
+        font-weight: 600;
+    }
+
+    .order-total {
+        background-color: #333;
+        color: white;
+        padding: 1rem;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .continue-shopping-btn {
+        display: inline-block;
+        background-color: #4CAF50;
+        color: white;
+        padding: 1rem 2rem;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: background-color 0.3s ease;
+        margin-top: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .continue-shopping-btn:hover {
+        background-color: #45a049;
+    }
+
+    @keyframes pop-in {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+        80% {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @media (max-width: 600px) {
+        .order-confirmation-container {
+            margin: 1rem;
+            padding: 1.5rem;
+        }
+
+        .order-confirmation-header h2 {
+            font-size: 2rem;
+        }
+
+        .checkmark {
+            width: 80px;
+            height: 80px;
+        }
+
+        .checkmark i {
+            font-size: 3rem;
+        }
+    }
+</style>
+
+<div class="order-confirmation-container">
+    <div class="checkmark">
+        <i class="fas fa-check"></i>
+    </div>
+
+    <div class="order-confirmation-header">
+        <h2>Order Confirmed</h2>
+        <p>Thank you for your purchase!</p>
+    </div>
+
+    <div class="order-details">
+        <div class="order-details-row">
+            <span class="order-details-label">Order Number</span>
+            <span class="order-details-value">{{ order.order_number }}</span>
+        </div>
+        <div class="order-details-row">
+            <span class="order-details-label">Payment Method</span>
+            {% if payment_method == 'wallet' %}
+            <span class="order-details-value">Wallet</span>
+            {% else %}
+            <span class="order-details-value">Cash on Delivery</span>
+            {% endif %}
+        </div>
+        <div class="order-details-row">
+            <span class="order-details-label">Order Status</span>
+            <span class="order-details-value">{{ order.status }}</span>
+        </div>
+    </div>
+
+    <div class="order-total">
+        <span>Total Amount</span>
+        <span>₹{{ order.total_amount|floatformat:2 }}</span>
+    </div>
+
+    <a href="{% url 'product:shop' %}" class="continue-shopping-btn">Continue Shopping</a>
+</div>
+
+{% endblock %}
+

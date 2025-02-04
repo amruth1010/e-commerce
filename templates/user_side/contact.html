@@ -1,0 +1,152 @@
+{% extends 'user_side/base2.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        
+        .header {
+            background-color: #f8f1ff;
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .section {
+            margin-bottom: 4rem;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            color: #444;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .contact-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .contact-method {
+            margin-bottom: 1rem;
+        }
+        
+        .highlight {
+            color: #d23669;
+            font-weight: bold;
+        }
+        
+        .contact-form {
+            margin-top: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+        
+        button {
+            background-color: #d23669;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        button:hover {
+            background-color: #b22d59;
+        }
+    </style>
+</head>
+<body>
+    <!-- Contact Page -->
+    <div class="header">
+        <div class="container">
+            <h1>Contact Us</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <h3>Get in Touch</h3>
+                    <div class="contact-method">
+                        <p><span class="highlight">Phone:</span> +91 9961437530</p>
+                        <p><span class="highlight">Email:</span> info@glamourista.com</p>
+                        <p><span class="highlight">Hours:</span> Monday - Saturday: 10 AM - 8 PM</p>
+                    </div>
+                </div>
+                
+                <div class="contact-card">
+                    <h3>Store Location</h3>
+                    <p>123 Fashion Avenue</p>
+                    <p>Fashion District</p>
+                    <p>Mumbai, Maharashtra 400001</p>
+                    <p>India</p>
+                </div>
+            </div>
+            
+            <div class="contact-card" style="margin-top: 2rem;">
+                <h3>Send us a Message</h3>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message:</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

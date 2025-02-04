@@ -1,0 +1,37 @@
+{% extends 'admin_side/base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 600px; margin: 0 auto; padding: 20px;">
+    <h1 style="text-align: center; color: #4CAF50;">Edit Stock for {{ product.product_name }}</h1>
+    
+    <form method="post" style="background-color: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+        {% csrf_token %}
+        
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="stock" style="font-size: 1.2em; color: #4CAF50;">Stock</label>
+            <input type="number" name="stock" id="stock" value="{{ product.stock }}" 
+                   style="width: 100%; padding: 10px; font-size: 1.1em; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+
+        <div style="text-align: center;">
+            <button type="submit" class="btn btn-primary" style="background-color: #4CAF50; color: white; padding: 10px 20px; font-size: 1.1em; border: none; border-radius: 5px; cursor: pointer;">
+                Update Stock
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    /* Button Hover Effect */
+    .btn-primary:hover {
+        background-color: #45a049;
+    }
+    
+    /* Form Focus Effect */
+    input[type="number"]:focus {
+        border-color: #4CAF50;
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        outline: none;
+    }
+</style>
+{% endblock %}

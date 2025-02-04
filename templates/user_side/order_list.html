@@ -1,0 +1,275 @@
+{% load static %}
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+    body {
+        background-color: #f7f7f7;
+        font-family: 'Poppins', sans-serif;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 40px auto;
+        background-color: white;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .orders-header {
+        background: linear-gradient(135deg, #000, #333);
+        color: white;
+        padding: 25px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .orders-header h1 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 500;
+        letter-spacing: 1px;
+    }
+
+    .order-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 20px;
+    }
+
+    .order-table th {
+        background-color: #f8f9fa;
+        color: #666;
+        font-weight: 500;
+        padding: 15px 20px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .order-table td {
+        padding: 15px 20px;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: middle;
+        font-weight: 300;
+    }
+
+    .order-table tr:hover {
+        background-color: #f9f9f9;
+        transition: background-color 0.3s ease;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 30px;
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-pending {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    .status-processing {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .status-completed {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .status-cancelled {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 6px 15px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 12px;
+    }
+
+    .btn-view {
+        background-color: #000;
+        color: white;
+        border: 1px solid #000;
+    }
+
+    .btn-view:hover {
+        background-color: #333;
+    }
+
+    .btn-cancel {
+        background-color: transparent;
+        color: #dc3545;
+        border: 1px solid #dc3545;
+    }
+
+    .btn-cancel:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 25px;
+        background-color: #f8f9fa;
+    }
+
+    .pagination-link {
+        margin: 0 10px;
+        text-decoration: none;
+        color: #666;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+    .pagination-link:hover {
+        color: #000;
+    }
+
+    .current {
+        font-weight: 600;
+        color: #000;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            margin: 20px 10px;
+        }
+
+        .orders-header {
+            padding: 20px 15px;
+        }
+
+        .orders-header h1 {
+            font-size: 22px;
+        }
+
+        .order-table thead {
+            display: none;
+        }
+
+        .order-table, .order-table tbody, .order-table tr, .order-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .order-table tr {
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .order-table td {
+            text-align: right;
+            position: relative;
+            padding: 10px 15px;
+        }
+
+        .order-table td::before {
+            content: attr(data-label);
+            float: left;
+            font-weight: 500;
+            text-transform: uppercase;
+            color: #666;
+        }
+
+        .action-buttons {
+            justify-content: flex-end;
+        }
+    }
+</style>
+
+<!-- Rest of the HTML remains the same as the original template -->
+<div class="container">
+    <div class="orders-header">
+        <h1>Your Orders</h1>
+    </div>
+
+    {% if page_obj.object_list %}
+        <table class="order-table">
+            <thead>
+                <tr>
+                    <th>Order Number</th>
+                    <th>Date</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in page_obj.object_list %}
+                <tr>
+                    <td data-label="Order Number">{{ order.order_number }}</td>
+                    <td data-label="Date">{{ order.created_at|date:"Y-m-d H:i" }}</td>
+                    <td data-label="Total Amount">₹{{ order.total_amount|floatformat:2 }}</td>
+                    <td data-label="Status">
+                        <span class="status-badge 
+                            {% if order.status == 'Pending' %}status-completed
+                            {% elif order.status == 'Processing' %}status-processing
+                            {% elif order.status == 'Completed' %}status-completed
+                            {% elif order.status == 'Cancelled' %}status-cancelled
+                            {% endif %}">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                    <td data-label="Actions" class="action-buttons">
+                        <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-view">View</a>
+                        {% if order.status in "Pending Processing" %}
+                            <a href="{% url 'orders:order_cancel' order.id %}" class="btn btn-cancel">Cancel</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination Controls -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" class="pagination-link">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination-link">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="pagination-link">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="pagination-link">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p style="text-align: center; padding: 20px;">You have no orders yet.</p>
+    {% endif %}
+</div>

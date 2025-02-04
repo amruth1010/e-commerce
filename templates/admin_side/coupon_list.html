@@ -1,0 +1,87 @@
+<!-- orders/templates/orders/coupon_list.html -->
+{% extends 'admin_side/base.html' %}
+
+{% block content %}
+<h2 style="color: #088178; text-align: center;">Coupon List</h2>
+
+<!-- Button for Adding a New Coupon -->
+<a href="{% url 'orders:create_coupon' %}" class="btn btn-primary">Add New Coupon</a>
+
+<table class="coupon-table">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Discount Amount</th>
+            <th>Expiration Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for coupon in coupons %}
+        <tr>
+            <td>{{ coupon.code }}</td>
+            <td>{{ coupon.discount_amount }}</td>
+            <td>{{ coupon.expiration_date }}</td>
+            <td>{{ coupon.is_active|yesno:"Active,Inactive" }}</td>
+            <td>
+                <a href="{% url 'orders:delete_coupon' coupon.id %}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<style>
+    h2 {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background-color: #088178; /* Custom Green */
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        margin-bottom: 20px;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #066b5e; /* Darker Green on hover */
+    }
+
+    .coupon-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        border: 1px solid #ddd;
+    }
+
+    .coupon-table th, .coupon-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .coupon-table th {
+        background-color: #f4f4f4;
+        color: #088178; /* Custom Green for the header */
+    }
+
+    .btn-danger {
+        background-color: red;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        background-color: darkred;
+    }
+</style>
+{% endblock %}
