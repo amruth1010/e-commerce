@@ -37,6 +37,10 @@ class OrderStatusForm(forms.ModelForm):
         model = Order
         fields = ['status']            
 
+from django import forms
+from django.utils import timezone
+from orders.models import Coupon  # Import your Coupon model
+
 class CouponForm(forms.ModelForm):
     class Meta:
         model = Coupon
@@ -44,3 +48,18 @@ class CouponForm(forms.ModelForm):
         widgets = {
             'expiration_date': forms.DateInput(attrs={'type': 'date'}),
         }
+
+    def clean_expiration_date(self):
+        expiration_date = self.cleaned_data.get('expiration_date')
+
+        if expiration_date:
+            # Convert expiration_date to a date-only format in case it's a datetime object
+            expiration_date = expiration_date.date()
+
+            # Convert timezone.now() to date to match expiration_date type
+            today = timezone.now().date()
+
+            if expiration_date < today:
+                raise forms.ValidationError("⚠️ Expiration date cannot be in the past.")
+        
+        return expiration_date

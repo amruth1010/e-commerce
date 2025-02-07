@@ -412,13 +412,17 @@ from orders.models import Coupon
 
 @login_required(login_url='/login/')
 def cart_detail(request):
-    cart = get_object_or_404(Cart, user=request.user)
-    cart_items = cart.items.all()
-    
-    # Calculate the total price of the cart items
-    total_price = sum(item.quantity * (item.size_variant.price if item.size_variant else item.product.price) for item in cart_items)
+    # Check if the cart exists; if not, create an empty cart context
+    cart = Cart.objects.filter(user=request.user).first()  # Avoid 404 error
+    cart_items = cart.items.all() if cart else []  # Handle missing cart safely
 
-    # Initialize variables for coupon handling
+    # Calculate the total price of the cart items
+    total_price = sum(
+        item.quantity * (item.size_variant.price if item.size_variant else item.product.price)
+        for item in cart_items
+    ) if cart else 0
+
+    # Handle coupon discount
     discount_amount = 0
     coupon_code = request.session.get('applied_coupon_code')
     if coupon_code:
@@ -429,10 +433,8 @@ def cart_detail(request):
         except Coupon.DoesNotExist:
             coupon_code = None
 
-    # Calculate the new total after applying the coupon
-    new_total_price = total_price - discount_amount
-    if new_total_price < 0:
-        new_total_price = 0
+    # Ensure the new total price does not go negative
+    new_total_price = max(total_price - discount_amount, 0)
 
     context = {
         'cart': cart,
@@ -442,7 +444,9 @@ def cart_detail(request):
         'new_total_price': new_total_price,
         'coupon_code': coupon_code,
     }
+
     return render(request, 'user_side/cart_detail.html', context)
+
 
 
 from django.shortcuts import get_object_or_404, redirect

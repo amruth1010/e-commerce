@@ -631,33 +631,58 @@ from django.db.models import Sum, Count, F
 from datetime import timedelta
 from django.shortcuts import render
 from .models import Order
+from datetime import datetime, timedelta
+from django.utils import timezone
+from django.utils.timezone import make_aware
+from django.shortcuts import render
+from django.db.models import Sum, Count, F
+from orders.models import Order  # Ensure you import your Order model
 
 def sales_report(request):
-    filter_type = request.GET.get('filter_type')  # 'daily', 'weekly', 'monthly', 'custom'
+    filter_type = request.GET.get('filter_type')
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
 
     today = timezone.now().date()
 
-    
+    # Handling different filter options
     if filter_type == 'daily':
-        start_date = today
-        end_date = today
+        start_date, end_date = today, today
     elif filter_type == 'weekly':
-        start_date = today - timedelta(days=7)
-        end_date = today
+        start_date, end_date = today - timedelta(days=7), today
     elif filter_type == 'monthly':
-        start_date = today - timedelta(days=30)
-        end_date = today
-    elif filter_type == 'custom' and start_date and end_date:
-        # Convert input dates to proper format
-        start_date = timezone.datetime.strptime(start_date, "%Y-%m-%d").date()
-        end_date = timezone.datetime.strptime(end_date, "%Y-%m-%d").date()
+        start_date, end_date = today - timedelta(days=30), today
+    elif filter_type == 'custom':
+        if not start_date or not end_date:
+            return render(request, 'admin_side/sales_report.html', {
+                'error_message': "⚠️ Please select both Start Date and End Date.",
+                'filter_type': filter_type
+            })
 
-    # Query the database based on the date range
+        try:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+            end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+
+            if start_date > end_date:
+                return render(request, 'admin_side/sales_report.html', {
+                    'error_message': "⚠️ Start Date cannot be later than End Date.",
+                    'filter_type': filter_type
+                })
+        except ValueError:
+            return render(request, 'admin_side/sales_report.html', {
+                'error_message': "⚠️ Invalid date format.",
+                'filter_type': filter_type
+            })
+    else:
+        start_date, end_date = today - timedelta(days=30), today  # Default to last 30 days
+
+    # Ensure start_date and end_date are timezone-aware
+    start_date = make_aware(datetime.combine(start_date, datetime.min.time()))
+    end_date = make_aware(datetime.combine(end_date, datetime.max.time()))
+
+    # Query orders based on the date range
     orders = Order.objects.filter(order_date__range=[start_date, end_date])
 
-    # Calculate total sales, discounts, and count of orders
     total_sales = orders.aggregate(total_sales=Sum(F('total_amount') - F('discount')))['total_sales'] or 0
     total_discount = orders.aggregate(total_discount=Sum('discount'))['total_discount'] or 0
     order_count = orders.aggregate(order_count=Count('id'))['order_count'] or 0
@@ -667,14 +692,12 @@ def sales_report(request):
         'total_sales': total_sales,
         'total_discount': total_discount,
         'order_count': order_count,
-        'start_date': start_date,
-        'end_date': end_date,
+        'start_date': start_date.date(),
+        'end_date': end_date.date(),
         'filter_type': filter_type,
     }
 
     return render(request, 'admin_side/sales_report.html', context)
-
-
 
 from django.http import HttpResponse
 from django.db.models import Sum

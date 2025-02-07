@@ -1,21 +1,21 @@
 {% extends 'admin_side/base.html' %}
 {% load static %}
 {% block content %}
+
 <head>
     <style>
-        /* Styles for the sales report section only */
         #sales-report-wrapper {
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
             margin: 20px;
-            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
         #sales-report-wrapper h2 {
             color: #28a745;
             margin-bottom: 20px;
         }
-
         #sales-report-wrapper form {
             margin-bottom: 30px;
             padding: 20px;
@@ -23,13 +23,11 @@
             background-color: #ffffff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
         #sales-report-wrapper label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
         }
-
         #sales-report-wrapper input[type="date"],
         #sales-report-wrapper select {
             padding: 10px;
@@ -38,7 +36,6 @@
             border-radius: 4px;
             width: calc(50% - 22px);
         }
-
         #sales-report-wrapper button {
             padding: 10px 20px;
             border: none;
@@ -49,11 +46,9 @@
             font-size: 16px;
             transition: background-color 0.3s;
         }
-
         #sales-report-wrapper button:hover {
             background-color: #218838;
         }
-
         #sales-report-wrapper table {
             width: 100%;
             border-collapse: collapse;
@@ -61,23 +56,18 @@
             background-color: #ffffff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
-        #sales-report-wrapper th,
-        #sales-report-wrapper td {
+        #sales-report-wrapper th, #sales-report-wrapper td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
-
         #sales-report-wrapper th {
             background-color: #28a745;
             color: white;
         }
-
         #sales-report-wrapper tr:hover {
             background-color: #f1f1f1;
         }
-
         #sales-report-wrapper a {
             display: inline-block;
             margin-top: 20px;
@@ -89,15 +79,26 @@
             text-decoration: none;
             transition: background-color 0.3s, color 0.3s;
         }
-
         #sales-report-wrapper a:hover {
             background-color: #28a745;
             color: white;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 
 <div id="sales-report-wrapper">
+    <h2>Sales Report</h2>
+
+    <!-- Display error message if any -->
+    {% if error_message %}
+        <p class="error-message">{{ error_message }}</p>
+    {% endif %}
+
     <form method="get">
         <label for="filter_type">Filter By:</label>
         <select name="filter_type" id="filter_type">
@@ -118,9 +119,9 @@
 
     <h2>Sales Report from {{ start_date }} to {{ end_date }}</h2>
 
-    <p>Total Sales Amount: ₹{{ total_sales }}</p>
-    <p>Total Discount Given: ₹{{ total_discount }}</p>
-    <p>Total Orders: {{ order_count }}</p>
+    <p><strong>Total Sales Amount:</strong> ₹{{ total_sales }}</p>
+    <p><strong>Total Discount Given:</strong> ₹{{ total_discount }}</p>
+    <p><strong>Total Orders:</strong> {{ order_count }}</p>
 
     <table>
         <thead>
@@ -139,50 +140,47 @@
                 <td>₹{{ order.discount }}</td>
                 <td>{{ order.order_date }}</td>
             </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No orders found for the selected period.</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
 
     <a href="{% url 'orders:download_pdf' %}?start_date={{ start_date|date:'Y-m-d' }}&end_date={{ end_date|date:'Y-m-d' }}&filter_type={{ filter_type }}">Download PDF</a>
     <a href="{% url 'orders:download_excel' %}?start_date={{ start_date|date:'Y-m-d' }}&end_date={{ end_date|date:'Y-m-d' }}&filter_type={{ filter_type }}">Download Excel</a>
-   
 </div>
 
-<!-- JavaScript to enable/disable date inputs and set date ranges -->
+<!-- JavaScript to enable/disable date inputs and validate date range -->
 <script>
     document.getElementById('filter_type').addEventListener('change', function() {
         const filterType = this.value;
         const startDateInput = document.getElementById('start_date');
         const endDateInput = document.getElementById('end_date');
-        
-        const today = new Date().toISOString().split('T')[0]; // Today's date in 'YYYY-MM-DD'
-        
+
+        startDateInput.disabled = filterType !== 'custom';
+        endDateInput.disabled = filterType !== 'custom';
+    });
+
+    document.querySelector('form').addEventListener('submit', function(event) {
+        const filterType = document.getElementById('filter_type').value;
+        const startDateValue = document.getElementById('start_date').value;
+        const endDateValue = document.getElementById('end_date').value;
+
         if (filterType === 'custom') {
-            startDateInput.disabled = false;
-            endDateInput.disabled = false;
-            startDateInput.value = '';
-            endDateInput.value = '';
-        } else {
-            // Disable date inputs for non-custom options
-            startDateInput.disabled = true;
-            endDateInput.disabled = true;
-            
-            if (filterType === 'daily') {
-                
-                startDateInput.value = today;
-                endDateInput.value = today;
-            } else if (filterType === 'weekly') {
-                
-                const lastWeek = new Date();
-                lastWeek.setDate(lastWeek.getDate() - 7);
-                startDateInput.value = lastWeek.toISOString().split('T')[0];
-                endDateInput.value = today;
-            } else if (filterType === 'monthly') {
-                
-                const lastMonth = new Date();
-                lastMonth.setDate(lastMonth.getDate() - 30);
-                startDateInput.value = lastMonth.toISOString().split('T')[0];
-                endDateInput.value = today;
+            if (!startDateValue || !endDateValue) {
+                alert('⚠️ Please select both Start Date and End Date.');
+                event.preventDefault(); // Stop form submission
+                return;
+            }
+
+            const startDate = new Date(startDateValue);
+            const endDate = new Date(endDateValue);
+
+            if (startDate > endDate) {
+                alert('⚠️ Start Date cannot be later than End Date.');
+                event.preventDefault(); // Stop form submission
             }
         }
     });
