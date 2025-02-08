@@ -194,8 +194,11 @@
         formData.append('razorpay_payment_id', response.razorpay_payment_id);
         formData.append('razorpay_order_id', response.razorpay_order_id);
         formData.append('razorpay_signature', response.razorpay_signature);
-        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-
+        
+        // Get CSRF token from the page
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        formData.append('csrfmiddlewaretoken', csrfToken);
+    
         fetch('{% url "orders:payment_callback" %}', {
             method: 'POST',
             body: formData,
@@ -221,6 +224,7 @@
             showMessage('Payment processing failed. Please try again.', 'error');
         });
     }
+    
 
     function showMessage(message, type) {
         const messageContainer = document.querySelector('.message-container');
