@@ -523,9 +523,7 @@ def remove_from_cart(request, item_id):
     
     cart_item.delete()
 
-    # If the request is AJAX, return a JSON response
-    if request.is_ajax():
-        # Retrieve remaining cart items for calculating the total price
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         cart_items = CartItem.objects.filter(cart=cart_item.cart)
         total_price = sum(item.product.price * item.quantity for item in cart_items)
 

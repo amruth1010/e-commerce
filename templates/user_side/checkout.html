@@ -132,14 +132,12 @@
 <!-- Razorpay Script -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-    // ... (keeping the existing JavaScript code unchanged as it handles the functionality) ...
     document.getElementById('place-order-form').addEventListener('submit', function(event) {
         event.preventDefault();
         
         const formData = new FormData(this);
-        
         showLoadingSpinner();
-        
+
         fetch('{% url "orders:checkout" %}', {
             method: 'POST',
             body: formData,
@@ -234,11 +232,14 @@
     }
 
     function showLoadingSpinner() {
-        document.getElementById('loading-spinner').classList.remove('hidden');
+        const spinner = document.getElementById('loading-spinner');
+        if (spinner) spinner.classList.remove('hidden');
     }
 
     function hideLoadingSpinner() {
-        document.getElementById('loading-spinner').classList.add('hidden');
+        const spinner = document.getElementById('loading-spinner');
+        if (spinner) spinner.classList.add('hidden');
     }
 </script>
+
 {% endblock %}
