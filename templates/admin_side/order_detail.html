@@ -1,0 +1,120 @@
+{% extends "admin_side/base.html" %}
+{% load static %}  <!-- Load static files if needed -->
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="text-center text-dark mb-4">Order Details - <span class="text-primary">{{ order.order_number }}</span></h2>
+
+    <!-- Order Information Card -->
+    <div class="card shadow-lg mb-4">
+        <div class="card-header bg-dark text-white">
+            <i class="fas fa-file-invoice"></i> Order Information
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Order ID</th>
+                    <td>{{ order.id }}</td>
+                </tr>
+                <tr>
+                    <th>Order Number</th>
+                    <td>{{ order.order_number }}</td>
+                </tr>
+                <tr>
+                    <th>Customer</th>
+                    <td>
+                        <i class="fas fa-user"></i> {{ order.user.first_name }} {{ order.user.last_name }} 
+                        ({{ order.user.email }})
+                    </td>
+                </tr>
+                <tr>
+                    <th>Address</th>
+                    <td>
+                        <i class="fas fa-map-marker-alt"></i> {{ order.address.address_line_1 }}, {{ order.address.address_line_2 }}<br>
+                        {{ order.address.city }}, {{ order.address.state }} - {{ order.address.postal_code }}<br>
+                        <i class="fas fa-phone"></i> {{ order.address.phone_number }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Order Date</th>
+                    <td><i class="fas fa-calendar"></i> {{ order.order_date }}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td><span class="badge bg-info">{{ order.get_status_display }}</span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Payment Information Card -->
+    <div class="card shadow-lg mb-4">
+        <div class="card-header bg-success text-white">
+            <i class="fas fa-credit-card"></i> Payment Details
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Payment Method</th>
+                    <td><i class="fas fa-money-check"></i> {{ order.get_payment_method_display }}</td>
+                </tr>
+                <tr>
+                    <th>Payment Status</th>
+                    <td><span class="badge bg-warning">{{ order.get_payment_status_display }}</span></td>
+                </tr>
+                <tr>
+                    <th>Total Amount</th>
+                    <td class="text-danger"><strong>₹{{ order.total_amount }}</strong></td>
+                </tr>
+                <tr>
+                    <th>Discount</th>
+                    <td class="text-success">- ₹{{ order.discount }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Ordered Products Card -->
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <i class="fas fa-box"></i> Ordered Products
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Product</th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                    <tr>
+                        <td>{{ item.product.product_name }}</td>
+                        <td>{{ item.size_variant.size_name|default:"small" }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td class="text-danger"><strong>₹{{ item.price }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="text-center mt-4">
+        <a href="{% url 'orders:admin_order_list' %}" class="btn btn-dark">
+            <i class="fas fa-arrow-left"></i> Back to Orders
+        </a>
+    </div>
+</div>
+
+<!-- FontAwesome for Icons (Only add this if not included in your project) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<!-- Bootstrap CSS (Only add this if not included in your project) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+{% endblock %}
